@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - NG Locations API</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg-main: #ffffff; --bg-surface: #f8fafc; --text-main: #0f172a; --text-muted: #475569; --primary: #4f46e5; --border-color: #e2e8f0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+    .header { position: fixed; top: 0; width: 100%; z-index: 50; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); }
+    .nav-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; height: 70px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: var(--text-main); }
+    .logo-icon { background: var(--primary); color: white; padding: 6px; border-radius: 8px; display: flex; }
+    .nav-links { display: none; gap: 30px; font-size: 0.9rem; font-weight: 600; }
+    @media(min-width: 768px) { .nav-links { display: flex; } }
+    .nav-links a:hover { color: var(--primary); }
+    .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; background: var(--text-main); color: white; border: none; cursor: pointer; }
+    .page-wrapper { max-width: 800px; margin: 120px auto 60px auto; padding: 0 20px; flex: 1; width: 100%; }
+    .page-title { text-align: center; font-size: 2.5rem; font-weight: 800; margin-bottom: 40px; }
+    .content p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 25px; }
+    .highlight { color: var(--text-main); font-weight: 600; }
+    footer { background: var(--bg-surface); border-top: 1px solid var(--border-color); padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: auto; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="nav-container">
+      <a href="index.html" class="logo"><div class="logo-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>NG Locations</a>
+      <nav class="nav-links">
+        <a href="features.html">Features</a>
+        <a href="documentation.html">Documentation</a>
+        <a href="support.html">Support</a>
+      </nav>
+      <a href="auth.html" class="btn">Dashboard</a>
+    </div>
+  </header>
+  <div class="page-wrapper">
+    <h1 class="page-title">Our Mission</h1>
+    <div class="content">
+      <p>We build tools for <span class="highlight">Nigerian developers, by Nigerian developers.</span></p>
+      <p>For years, building apps for the Nigerian market meant dealing with the same frustrating problem: manually copying, pasting, and maintaining massive lists of states and Local Government Areas. It was a waste of time and prone to errors.</p>
+      <p>We created the <span class="highlight">NG Locations API</span> to solve this. We believe that infrastructure data should be accessible, accurate, and incredibly easy to integrate.</p>
+      <p>Our API handles the data, the updates, and the security so you can focus on building what actually matters: <span class="highlight">your product.</span></p>
+    </div>
+  </div>
+  <footer>&copy; 2024 NG Locations API. All rights reserved.</footer>
+</body>
+</html>
