@@ -30,8 +30,18 @@
     .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
     .card-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
     
-    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); background: var(--bg-main); border-radius: 12px; border: 1px dashed var(--border-color); }
-    .empty-state h3 { color: var(--text-main); margin-bottom: 5px; font-size: 1.2rem; }
+    /* NEW STATS UI */
+    .total-stat { background: linear-gradient(135deg, #eef2ff, #e0e7ff); padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px; border: 1px solid #c7d2fe; }
+    .total-stat h2 { font-size: 3rem; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 10px; }
+    .total-stat p { font-size: 0.9rem; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+    
+    .key-row { display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 12px; background: white; }
+    .key-row h4 { font-size: 1rem; color: var(--text-main); margin-bottom: 4px; }
+    .key-row code { background: var(--bg-main); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border-color); }
+    .key-count { font-size: 1.2rem; font-weight: 800; color: var(--primary); white-space: nowrap; }
+    .key-count span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); background: var(--bg-main); border-radius: 12px; border: 1px dashed var(--border-color); }
   </style>
 </head>
 <body>
@@ -56,12 +66,18 @@
     <main class="main-content">
       <div class="card">
         <h2 class="card-title">API Usage</h2>
-        <p class="card-subtitle">Monitor your API request volume for the current month.</p>
+        <p class="card-subtitle">Monitor your API request volume.</p>
         
-        <div class="empty-state">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; opacity: 0.5;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          <h3>0 Requests</h3>
-          <p>You haven't made any API requests this month. Once you start using your keys, data will appear here.</p>
+        <!-- Total Requests -->
+        <div class="total-stat">
+          <h2 id="total-requests">0</h2>
+          <p>Total Requests</p>
+        </div>
+
+        <!-- Breakdown by Key -->
+        <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Usage Breakdown by Key</h3>
+        <div id="keys-list">
+          <div class="empty-state">Loading usage data...</div>
         </div>
       </div>
     </main>
@@ -70,13 +86,57 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      // Initialize Supabase
       const supabase = window.supabase.createClient('https://grniwunynpmakpilhryh.supabase.co', 'sb_publishable_ahGy4oAWBhqZ0ux4EabSfg_FAqwlDul');
+      
+      // Auth Guard
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { window.location.href = 'auth.html'; return; }
 
+      // Set User Info
       const username = session.user.user_metadata?.username || session.user.email.split('@')[0];
       document.getElementById('header-name').textContent = username;
       document.getElementById('header-avatar').textContent = username.charAt(0);
+
+      // Fetch Data
+      const { data: keys, error } = await supabase
+        .from('api_keys')
+        .select('name, key_prefix, request_count, revoked')
+        .order('request_count', { ascending: false });
+
+      const listEl = document.getElementById('keys-list');
+      const totalEl = document.getElementById('total-requests');
+
+      if (error) {
+        listEl.innerHTML = `<div class="empty-state" style="color: red;">Error loading data: ${error.message}</div>`;
+        return;
+      }
+
+      if (keys.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">You haven't generated any API keys yet.</div>`;
+        return;
+      }
+
+      let totalRequests = 0;
+
+      // Build the HTML for each key
+      const html = keys.map(key => {
+        const count = key.request_count || 0;
+        totalRequests += count;
+        
+        return `
+          <div class="key-row">
+            <div>
+              <h4>${key.name} ${key.revoked ? '<span style="color:#dc2626; font-size:0.75rem;">(Revoked)</span>' : ''}</h4>
+              <code>${key.key_prefix}••••••••</code>
+            </div>
+            <div class="key-count">${count.toLocaleString()} <span>reqs</span></div>
+          </div>
+        `;
+      }).join('');
+
+      listEl.innerHTML = html;
+      totalEl.textContent = totalRequests.toLocaleString();
     });
   </script>
 </body>
