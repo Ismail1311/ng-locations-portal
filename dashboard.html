@@ -190,11 +190,17 @@
               <button class="btn-copy" onclick="copyCode(this)">Copy</button>
             </div>
             <div class="terminal-body" id="code-snippet">
-              <span class="code-keyword">fetch</span>(<span class="code-string">'https://api.nglocations.com/v1/states'</span>, {<br>
-              &nbsp;&nbsp;headers: { <span class="code-string">'x-api-key'</span>: <span class="code-string">'YOUR_API_KEY'</span> }<br>
+              <span class="code-keyword">const</span> API_KEY = <span class="code-string">'YOUR_API_KEY'</span>;<br>
+              <span class="code-keyword">const</span> BASE_URL = <span class="code-string">'https://ng-locations-api.onrender.com/api/v1'</span>;<br><br>
+              <span class="code-keyword">fetch</span>(<span class="code-string">`${BASE_URL}/states`</span>, {<br>
+              &nbsp;&nbsp;method: <span class="code-string">'GET'</span>,<br>
+              &nbsp;&nbsp;headers: {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">'x-api-key'</span>: API_KEY<br>
+              &nbsp;&nbsp;}<br>
               })<br>
-              .then(res => res.json())<br>
-              .then(data => console.log(data));
+              .<span class="code-keyword">then</span>(response => response.json())<br>
+              .<span class="code-keyword">then</span>(data => console.log(data))<br>
+              .<span class="code-keyword">catch</span>(error => console.error(error));
             </div>
           </div>
         </div>
